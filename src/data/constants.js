@@ -132,5 +132,13 @@ export const CONTACT_INFO = {
   // Background notification & receiving destinations (NEVER exposed in UI)
   adminRecipientEmail: 'meetratnesh@gmail.com',
   adminNotificationPhone: '919901045437',
+
+  // Official Meta WhatsApp Cloud API Integration
+  metaWhatsApp: {
+    phoneNumberId: '1401333779719378',
+    accessToken:
+      'EAAfFP6jONegBSpRQ66HgGA8vxD2sdaBsPBkdNYTqUHtKF8GViMbun6ZAkk9dSgiaiZACjEu9Upn6ljCfV3UuyvgesJTbk1YQcrwgyAxUNl8ZBZB0nljZBaXeuuZAYMXMPfhrKXEBjzlmKSKmU4AwFpdg4vfUHhJIVgqiRGv4FZALl6irf1qHnmea21akgXkC4oRAOgTPcpVVw0VXX0bAQk1ZCJEaupIcZBmNcjhSGpk3m1FdeFYmub7ZC5CMbrPpx83gD5lcR8nYaaHGhLqropHfLM8AZDZD',
+    recipientPhone: '919901045437',
+  },
 }
 

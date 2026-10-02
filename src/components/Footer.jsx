@@ -2,6 +2,8 @@ import React from 'react'
 import logo from '../assets/ryneura-logo.png'
 import { ArrowUp, Github, Linkedin, Twitter } from 'lucide-react'
 
+import { CONTACT_INFO } from '../data/constants'
+
 export default function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -26,6 +28,20 @@ export default function Footer() {
               Engineering intelligence for tomorrow's software. Custom AI, Machine Learning models, and high-performance
               cloud SaaS platforms.
             </p>
+            <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-[#5A6A85]">
+              <a href={`mailto:${CONTACT_INFO.email}`} className="hover:text-[#00D4FF] transition-colors">
+                {CONTACT_INFO.email}
+              </a>
+              <span>·</span>
+              <a
+                href={`https://wa.me/${CONTACT_INFO.whatsappNumber}`}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[#25D366] transition-colors"
+              >
+                WhatsApp: {CONTACT_INFO.phone}
+              </a>
+            </div>
           </div>
 
           {/* Quick links */}

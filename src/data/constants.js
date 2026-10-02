@@ -122,3 +122,10 @@ export const SERVICE_DROPDOWN = [
   'Other',
 ]
 
+export const CONTACT_INFO = {
+  email: 'meetratnesh@gmail.com',
+  phone: '+91 9901045437',
+  whatsappNumber: '919901045437',
+  whatsappMessage: 'Hi Ratnesh, I am reaching out from Ryneura website regarding an AI/Software project.',
+}
+

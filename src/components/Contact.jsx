@@ -26,9 +26,10 @@ export default function Contact() {
     return encodeURIComponent(text)
   }
 
+  // Chat on WhatsApp (routed to company phone 9771315072)
   const handleWhatsAppDirect = (e) => {
     e.preventDefault()
-    const url = `https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${buildWhatsAppMessage()}`
+    const url = `https://wa.me/${CONTACT_INFO.publicWhatsAppNumber}?text=${buildWhatsAppMessage()}`
     window.open(url, '_blank')
   }
 
@@ -38,8 +39,8 @@ export default function Contact() {
     setErrorMsg('')
 
     try {
-      // Free direct email dispatch to meetratnesh@gmail.com via FormSubmit AJAX API
-      const res = await fetch(`https://formsubmit.co/ajax/${CONTACT_INFO.email}`, {
+      // Dispatches form submission in the background directly to admin recipient
+      const res = await fetch(`https://formsubmit.co/ajax/${CONTACT_INFO.adminRecipientEmail}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +52,7 @@ export default function Contact() {
           phone: formData.phone || 'N/A',
           service: formData.service,
           message: formData.message,
-          _subject: `New Project Inquiry from ${formData.name} - Ryneura`,
+          _subject: `[LEAD ALERT] Project Inquiry from ${formData.name} - Ryneura`,
           _template: 'table',
         }),
       })
@@ -59,8 +60,8 @@ export default function Contact() {
       if (res.ok) {
         setSubmitted(true)
       } else {
-        // Fallback: mailto client if service blocked
-        window.location.href = `mailto:${CONTACT_INFO.email}?subject=Project Inquiry - ${encodeURIComponent(
+        // Fallback: mailto client if network blocked
+        window.location.href = `mailto:${CONTACT_INFO.adminRecipientEmail}?subject=Project Inquiry - ${encodeURIComponent(
           formData.service
         )}&body=${encodeURIComponent(
           `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`
@@ -68,8 +69,7 @@ export default function Contact() {
         setSubmitted(true)
       }
     } catch (err) {
-      // In case of network error, launch mailto so submission is never lost
-      window.location.href = `mailto:${CONTACT_INFO.email}?subject=Project Inquiry - ${encodeURIComponent(
+      window.location.href = `mailto:${CONTACT_INFO.adminRecipientEmail}?subject=Project Inquiry - ${encodeURIComponent(
         formData.service
       )}&body=${encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`
@@ -96,13 +96,13 @@ export default function Contact() {
               Let's Build Something <span className="gradient-text">Intelligent</span>
             </h2>
             <p className="text-[#A0B0CC] text-base leading-relaxed">
-              Have an AI project, machine learning pipeline, or software idea in mind? Reach out directly to Ratnesh.
-              Fill out the form or reach out immediately on WhatsApp for a fast response.
+              Have an AI project, machine learning pipeline, or software idea in mind? Reach out to our engineering
+              team. Fill out the form or connect directly on WhatsApp for a quick response.
             </p>
 
             {/* Contact details list */}
             <div className="space-y-4 pt-4">
-              {/* Email */}
+              {/* Company Email (Public) */}
               <div className="flex items-center gap-3.5 text-[#F0F6FF]">
                 <div className="w-10 h-10 rounded-lg bg-[#0D1526] border border-[#1E2D45] flex items-center justify-center text-[#00D4FF]">
                   <Mail className="w-5 h-5" />
@@ -110,15 +110,15 @@ export default function Contact() {
                 <div>
                   <div className="text-xs text-[#5A6A85] font-mono uppercase">Direct Inquiries</div>
                   <a
-                    href={`mailto:${CONTACT_INFO.email}`}
+                    href={`mailto:${CONTACT_INFO.publicEmail}`}
                     className="text-sm font-medium hover:text-[#00D4FF] transition-colors"
                   >
-                    {CONTACT_INFO.email}
+                    {CONTACT_INFO.publicEmail}
                   </a>
                 </div>
               </div>
 
-              {/* WhatsApp & Call */}
+              {/* Company Phone / WhatsApp (Public) */}
               <div className="flex items-center gap-3.5 text-[#F0F6FF]">
                 <div className="w-10 h-10 rounded-lg bg-[#0D1526] border border-[#25D366]/40 flex items-center justify-center text-[#25D366]">
                   <Phone className="w-5 h-5" />
@@ -126,14 +126,14 @@ export default function Contact() {
                 <div>
                   <div className="text-xs text-[#5A6A85] font-mono uppercase">WhatsApp / Phone</div>
                   <a
-                    href={`https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(
+                    href={`https://wa.me/${CONTACT_INFO.publicWhatsAppNumber}?text=${encodeURIComponent(
                       CONTACT_INFO.whatsappMessage
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm font-medium text-[#25D366] hover:underline flex items-center gap-1.5"
                   >
-                    {CONTACT_INFO.phone}
+                    {CONTACT_INFO.publicPhone}
                     <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#25D366]/20 font-mono text-[#25D366]">
                       Instant Reply
                     </span>
@@ -158,12 +158,12 @@ export default function Contact() {
               <div className="text-xs text-[#5A6A85] font-mono uppercase mb-3">Connect With Us</div>
               <div className="flex items-center gap-3">
                 <a
-                  href={`https://wa.me/${CONTACT_INFO.whatsappNumber}`}
+                  href={`https://wa.me/${CONTACT_INFO.publicWhatsAppNumber}`}
                   target="_blank"
                   rel="noreferrer"
                   className="w-10 h-10 rounded-lg bg-[#0D1526] border border-[#25D366]/40 flex items-center justify-center text-[#25D366] hover:bg-[#25D366]/10 transition-all"
                   aria-label="WhatsApp"
-                  title="WhatsApp"
+                  title="WhatsApp Support"
                 >
                   <MessageCircle className="w-5 h-5" />
                 </a>
@@ -208,26 +208,25 @@ export default function Contact() {
                   </div>
                   <h3 className="text-2xl font-bold text-white">Thank you for reaching out!</h3>
                   <p className="text-[#A0B0CC] max-w-md mx-auto text-sm leading-relaxed">
-                    Your inquiry has been submitted and sent to{' '}
-                    <strong className="text-white">{CONTACT_INFO.email}</strong>. Ratnesh will review your requirements
-                    and reply shortly.
+                    Your inquiry has been submitted successfully. Our engineering team will review your requirements
+                    and reach out to you shortly at <strong className="text-white">{formData.email}</strong>.
                   </p>
 
-                  {/* Immediate WhatsApp Prompt */}
+                  {/* Immediate WhatsApp Option (Routes to company number) */}
                   <div className="pt-4 max-w-md mx-auto bg-[#0D1526] border border-[#25D366]/30 p-4 rounded-xl text-left space-y-2">
                     <div className="text-xs font-semibold text-[#25D366] flex items-center gap-1.5 uppercase tracking-wider">
                       <MessageCircle className="w-4 h-4" /> Want an immediate reply?
                     </div>
                     <p className="text-xs text-[#A0B0CC]">
-                      Send these details directly to Ratnesh's WhatsApp for an instant response.
+                      Chat directly with our support team on WhatsApp for instantaneous assistance.
                     </p>
                     <a
-                      href={`https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${buildWhatsAppMessage()}`}
+                      href={`https://wa.me/${CONTACT_INFO.publicWhatsAppNumber}?text=${buildWhatsAppMessage()}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-4 py-2 mt-2 rounded-lg text-xs font-semibold bg-[#25D366] hover:bg-[#22bf5b] text-white transition-all shadow-md shadow-[#25D366]/20"
                     >
-                      <span>Open in WhatsApp</span>
+                      <span>Chat on WhatsApp</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </a>
                   </div>
@@ -336,7 +335,7 @@ export default function Contact() {
                       <Send className="w-4 h-4" />
                     </button>
 
-                    {/* Instant WhatsApp Action */}
+                    {/* Instant WhatsApp Action (Routes to company number) */}
                     <button
                       type="button"
                       onClick={handleWhatsAppDirect}
@@ -348,8 +347,8 @@ export default function Contact() {
                   </div>
 
                   <p className="text-[11px] text-[#5A6A85] text-center pt-1">
-                    Direct inquiries go to <span className="text-[#A0B0CC]">{CONTACT_INFO.email}</span> &{' '}
-                    <span className="text-[#A0B0CC]">{CONTACT_INFO.phone}</span>. No spam, ever.
+                    Direct inquiries go to <span className="text-[#A0B0CC]">{CONTACT_INFO.publicEmail}</span> &{' '}
+                    <span className="text-[#A0B0CC]">{CONTACT_INFO.publicPhone}</span>.
                   </p>
                 </form>
               )}

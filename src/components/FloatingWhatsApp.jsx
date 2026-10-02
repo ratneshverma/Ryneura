@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { CONTACT_INFO } from '../data/constants'
 
 export default function FloatingWhatsApp() {
   const [showTooltip, setShowTooltip] = useState(true)
 
-  const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(
+  const whatsappUrl = `https://wa.me/${CONTACT_INFO.publicWhatsAppNumber}?text=${encodeURIComponent(
     CONTACT_INFO.whatsappMessage
   )}`
 
@@ -27,7 +27,7 @@ export default function FloatingWhatsApp() {
             </div>
             <div>
               <p className="text-xs font-semibold text-white">Chat on WhatsApp</p>
-              <p className="text-[11px] text-[#A0B0CC]">Direct reply from Ratnesh</p>
+              <p className="text-[11px] text-[#A0B0CC]">Direct support from Ryneura team</p>
             </div>
             <button
               onClick={(e) => {
@@ -50,7 +50,7 @@ export default function FloatingWhatsApp() {
         rel="noopener noreferrer"
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
-        aria-label="Chat on WhatsApp with Ratnesh"
+        aria-label="Chat on WhatsApp with Ryneura Team"
         className="relative group w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#22bf5b] text-white flex items-center justify-center shadow-lg shadow-[#25D366]/30 transition-colors"
       >
         {/* Glow pulse ring */}

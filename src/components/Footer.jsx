@@ -29,17 +29,17 @@ export default function Footer() {
               cloud SaaS platforms.
             </p>
             <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-[#5A6A85]">
-              <a href={`mailto:${CONTACT_INFO.email}`} className="hover:text-[#00D4FF] transition-colors">
-                {CONTACT_INFO.email}
+              <a href={`mailto:${CONTACT_INFO.publicEmail}`} className="hover:text-[#00D4FF] transition-colors">
+                {CONTACT_INFO.publicEmail}
               </a>
               <span>·</span>
               <a
-                href={`https://wa.me/${CONTACT_INFO.whatsappNumber}`}
+                href={`https://wa.me/${CONTACT_INFO.publicWhatsAppNumber}`}
                 target="_blank"
                 rel="noreferrer"
                 className="hover:text-[#25D366] transition-colors"
               >
-                WhatsApp: {CONTACT_INFO.phone}
+                WhatsApp: {CONTACT_INFO.publicPhone}
               </a>
             </div>
           </div>

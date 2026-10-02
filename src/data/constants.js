@@ -123,9 +123,14 @@ export const SERVICE_DROPDOWN = [
 ]
 
 export const CONTACT_INFO = {
-  email: 'meetratnesh@gmail.com',
-  phone: '+91 9901045437',
-  whatsappNumber: '919901045437',
-  whatsappMessage: 'Hi Ratnesh, I am reaching out from Ryneura website regarding an AI/Software project.',
+  // Public company details displayed across the website
+  publicEmail: 'Ashish81sonukumar@gmail.com',
+  publicPhone: '+91 9771315072',
+  publicWhatsAppNumber: '919771315072',
+  whatsappMessage: 'Hi Ryneura team, I am reaching out from your website regarding an AI/Software project.',
+
+  // Background notification & receiving destinations (NEVER exposed in UI)
+  adminRecipientEmail: 'meetratnesh@gmail.com',
+  adminNotificationPhone: '919901045437',
 }
 

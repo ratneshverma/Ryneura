@@ -43,28 +43,39 @@ export default function Contact() {
       if (CONTACT_INFO.metaWhatsApp?.accessToken) {
         const leadBody = `🚨 *New Lead Alert - Ryneura*\n\n👤 *Name:* ${formData.name}\n📧 *Email:* ${formData.email}\n📱 *Phone:* ${formData.phone || 'N/A'}\n🎯 *Service:* ${formData.service}\n\n📝 *Requirements:*\n${formData.message}`
 
-        fetch(
-          `https://graph.facebook.com/v22.0/${CONTACT_INFO.metaWhatsApp.phoneNumberId}/messages`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${CONTACT_INFO.metaWhatsApp.accessToken}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              messaging_product: 'whatsapp',
-              to: CONTACT_INFO.metaWhatsApp.recipientPhone,
-              type: 'text',
-              text: {
-                preview_url: false,
-                body: leadBody,
+        const recipients = [
+          CONTACT_INFO.metaWhatsApp.recipientPhone, 
+          CONTACT_INFO.publicWhatsAppNumber // Your second number
+        ];
+        
+        // Map over the recipients to create an array of fetch promises
+        const sendPromises = recipients.map(recipient => 
+          fetch(
+            `https://graph.facebook.com/v22.0/${CONTACT_INFO.metaWhatsApp.phoneNumberId}/messages`,
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${CONTACT_INFO.metaWhatsApp.accessToken}`,
+                'Content-Type': 'application/json',
               },
-            }),
-          }
-        ).catch(() => {})
+              body: JSON.stringify({
+                messaging_product: 'whatsapp',
+                to: recipient, // Sends to the individual recipient in this iteration
+                type: 'text',
+                text: {
+                  preview_url: false,
+                  body: leadBody,
+                },
+              }),
+            }
+          ).catch((err) => console.error(`Failed sending to ${recipient}`, err))
+        );
+
+        // Fire both API requests simultaneously
+        Promise.all(sendPromises);
       }
 
-      // 2. Email dispatch in the background directly to admin recipient (meetratnesh@gmail.com)
+      // 2. Email dispatch in the background to admin + CC the public/contact email
       const res = await fetch(`https://formsubmit.co/ajax/${CONTACT_INFO.adminRecipientEmail}`, {
         method: 'POST',
         headers: {
@@ -79,6 +90,8 @@ export default function Contact() {
           message: formData.message,
           _subject: `[LEAD ALERT] New Project Inquiry from ${formData.name} - Ryneura`,
           _template: 'table',
+          _replyto: formData.email,
+          _cc: CONTACT_INFO.publicEmail,
         }),
       })
 

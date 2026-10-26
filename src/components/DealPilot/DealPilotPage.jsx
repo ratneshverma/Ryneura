@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight, Loader2, RefreshCw, ShoppingCart, Sparkles } from 'lucide-react'
 import ProductCard from './ProductCard'
 
-const BACKEND_API = 'http://127.0.0.1:8000/api/v1/products'
+const BACKEND_API = 'https://dealpilot-stap.onrender.com/api/v1/products'
 
 export default function DealPilotPage() {
   const [products, setProducts] = useState([])

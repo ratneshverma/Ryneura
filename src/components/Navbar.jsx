@@ -1,30 +1,59 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import logo from '../assets/ryneura-logo.png'
-import { Menu, X, ArrowRight } from 'lucide-react'
+import { Menu, X, ArrowRight, ShoppingBag } from 'lucide-react'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [currentPath, setCurrentPath] = useState(window.location.pathname)
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
     }
     window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname)
+    }
+    window.addEventListener('popstate', handleLocationChange)
+    window.addEventListener('pushstate', handleLocationChange)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('popstate', handleLocationChange)
+      window.removeEventListener('pushstate', handleLocationChange)
+    }
   }, [])
 
   const navLinks = [
-    { label: 'Overview', href: '#overview' },
-    { label: 'Services', href: '#services' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Overview', href: '/#overview' },
+    { label: 'Services', href: '/#services' },
+    { label: 'DealPilot Store', href: '/dealpilot' },
+    { label: 'Contact', href: '/#contact' },
   ]
 
-  const scrollTo = (id) => {
+  const handleNavClick = (e, href) => {
     setMobileMenuOpen(false)
-    const element = document.querySelector(id)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+    if (href.startsWith('/#')) {
+      e.preventDefault()
+      const elementId = href.substring(2)
+      if (currentPath !== '/') {
+        window.history.pushState({}, '', '/')
+        window.dispatchEvent(new Event('popstate'))
+        setTimeout(() => {
+          const el = document.getElementById(elementId)
+          if (el) el.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+      } else {
+        const el = document.getElementById(elementId)
+        if (el) el.scrollIntoView({ behavior: 'smooth' })
+      }
+    } else {
+      e.preventDefault()
+      window.history.pushState({}, '', href)
+      window.dispatchEvent(new Event('popstate'))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
@@ -38,7 +67,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand Logo */}
-        <a href="#overview" className="flex items-center gap-3 group">
+        <a href="/" onClick={(e) => handleNavClick(e, '/')} className="flex items-center gap-3 group">
           <img
             src={logo}
             alt="Ryneura"
@@ -48,22 +77,31 @@ export default function Navbar() {
 
         {/* Desktop Nav Links */}
         <div className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => (
-            <button
-              key={link.label}
-              onClick={() => scrollTo(link.href)}
-              className="text-[#A0B0CC] hover:text-[#00D4FF] font-medium text-sm transition-colors duration-200"
-            >
-              {link.label}
-            </button>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = currentPath === link.href || (currentPath === '/' && link.href === '/#overview')
+            return (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className={`text-sm font-medium transition-colors duration-200 flex items-center gap-1.5 cursor-pointer ${
+                  link.href === '/dealpilot'
+                    ? 'text-[#00D4FF] font-semibold hover:text-white'
+                    : isActive ? 'text-[#00D4FF]' : 'text-[#A0B0CC] hover:text-[#00D4FF]'
+                }`}
+              >
+                {link.label === 'DealPilot Store' && <ShoppingBag className="w-3.5 h-3.5" />}
+                {link.label}
+              </a>
+            )
+          })}
         </div>
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center">
           <button
-            onClick={() => scrollTo('#contact')}
-            className="relative inline-flex items-center justify-center p-0.5 overflow-hidden rounded-xl font-medium text-sm group bg-gradient-to-r from-[#00D4FF] via-[#3B6EF5] to-[#A855F7] hover:shadow-lg hover:shadow-[#3B6EF5]/30 transition-all duration-300"
+            onClick={(e) => handleNavClick(e, '/#contact')}
+            className="relative inline-flex items-center justify-center p-0.5 overflow-hidden rounded-xl font-medium text-sm group bg-gradient-to-r from-[#00D4FF] via-[#3B6EF5] to-[#A855F7] hover:shadow-lg hover:shadow-[#3B6EF5]/30 transition-all duration-300 cursor-pointer"
           >
             <span className="px-5 py-2.5 transition-all ease-in duration-200 bg-[#080D1A] rounded-[10px] group-hover:bg-opacity-0 text-[#F0F6FF] flex items-center gap-2">
               Get Started
@@ -89,17 +127,19 @@ export default function Navbar() {
         <div className="md:hidden bg-[#080D1A]/95 backdrop-blur-xl border-b border-[#1E2D45] px-6 py-6 transition-all duration-300">
           <div className="flex flex-col space-y-4">
             {navLinks.map((link) => (
-              <button
+              <a
                 key={link.label}
-                onClick={() => scrollTo(link.href)}
-                className="text-left text-[#A0B0CC] hover:text-[#00D4FF] text-base font-medium py-2 transition-colors"
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="text-left text-[#A0B0CC] hover:text-[#00D4FF] text-base font-medium py-2 transition-colors flex items-center gap-2 cursor-pointer"
               >
+                {link.label === 'DealPilot Store' && <ShoppingBag className="w-4 h-4 text-[#00D4FF]" />}
                 {link.label}
-              </button>
+              </a>
             ))}
             <button
-              onClick={() => scrollTo('#contact')}
-              className="mt-4 w-full py-3 rounded-xl bg-gradient-to-r from-[#00D4FF] via-[#3B6EF5] to-[#A855F7] text-white font-medium text-center flex items-center justify-center gap-2 shadow-lg shadow-[#3B6EF5]/25"
+              onClick={(e) => handleNavClick(e, '/#contact')}
+              className="mt-4 w-full py-3 rounded-xl bg-gradient-to-r from-[#00D4FF] via-[#3B6EF5] to-[#A855F7] text-white font-medium text-center flex items-center justify-center gap-2 shadow-lg shadow-[#3B6EF5]/25 cursor-pointer"
             >
               Get Started
               <ArrowRight className="w-4 h-4" />
